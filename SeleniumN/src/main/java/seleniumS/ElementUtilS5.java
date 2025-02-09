@@ -1,6 +1,9 @@
 package seleniumS;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -12,19 +15,36 @@ public class ElementUtilS5 {
 		this.driver = driver;
 	}
 	
-	public WebElement getElement(By elementLocator) {
-		return driver.findElement(elementLocator);
+	private void nullCheck(CharSequence... value) {
+		if(value==null) {
+			throw new RuntimeException("==*value cannot be NULL*==");
+		}
+	}
+	
+	public WebElement getElement(By locator) {
+		return driver.findElement(locator);
+	}
+	
+	public WebElement getChildElement(By locator1, By locator2) {
+		return getElement(locator1).findElement(locator2);
+	}
+	
+	public List<WebElement> getChildElements(By locator1, By locator2) {
+		return getElement(locator1).findElements(locator2);
 	}
 	
 	public WebElement getElement(String locatorType, String locatorValue) {
 		return driver.findElement(getLocator(locatorType, locatorValue));
 	}
 	
-	public void type(By elementLocator, String text) {
-		getElement(elementLocator).sendKeys(text);
+	public void type(By locator, CharSequence... text) {
+		nullCheck(text);
+		getElement(locator).sendKeys(text);
 	}
 	
-	public void type(String locatorType, String locatorValue, String text) {
+	/*locatorType ==> Attribute; locatorValue ==> Attribute Value*/
+	public void type(String locatorType, String locatorValue, CharSequence... text) {
+		nullCheck(text);
 		getElement(locatorType, locatorValue).sendKeys(text);
 	}
 	
@@ -32,6 +52,7 @@ public class ElementUtilS5 {
 		getElement(elementLocator).click();
 	}
 	
+	/*locatorType ==> Attribute; locatorValue ==> Attribute Value*/
 	public void clickOnTheElement(String locatorType, String locatorValue) {
 		getElement(locatorType, locatorValue).click();
 	}
@@ -40,8 +61,63 @@ public class ElementUtilS5 {
 		return getElement(elementLocator).getText();
 	}
 	
+	/*locatorType ==> Attribute; locatorValue ==> Attribute Value*/
 	public String getElementText(String locatorType, String locatorValue) {
 		return getElement(locatorType, locatorValue).getText();
+	}
+	
+	public String getElementAttribute(By locator, String attrName) {
+		nullCheck(attrName);
+		return getElement(locator).getDomAttribute(attrName);
+	}
+	
+	public String getElementProperty(By locator, String propName) {
+		nullCheck(propName);
+		return getElement(locator).getDomProperty(propName);
+	}
+	
+	/*Following method uses the isDisplayed() method with locator*/
+	/*
+	  try to avoid to utilize the following method
+	  because, it will throw NoSuchElementException, 
+	  in case the element is not available on the page.
+	*/
+	public boolean isAnElementDisplayed(By elementLocator) {
+		return getElement(elementLocator).isDisplayed();
+	}
+	
+	/*Following method returns a list of WebElements*/
+	public List<WebElement> getElements(By locator) {
+		return driver.findElements(locator);
+	}
+	
+	public boolean isElementDisplayedAtLeastOnce(By locator) {
+		if(getElements(locator).size() == 1) {
+			System.out.println("Element is displayed on the page.");
+			return true;
+		}else {
+			System.out.println("Element is not displayed on the page.");
+			return false;
+		}
+	}
+	
+	public boolean areElementsDisplayed(By locator, int elementCount) {
+		if(getElements(locator).size() == elementCount) {
+			System.out.println("Element is displayed on the page for " + elementCount);
+			return true;
+		}else {
+			System.out.println("Element is not displayed on the page.");
+			return false;
+		}
+	}
+	
+	public boolean isElementDisplayed(By locator) {
+		try {
+			return getElement(locator).isDisplayed();
+		}catch(NoSuchElementException e){
+			System.out.println("Element is not displayed.");
+			return false;
+		}
 	}
 	
 	public By getLocator(String locatorType, String locatorValue) {
@@ -80,8 +156,4 @@ public class ElementUtilS5 {
 		return locator;
 	}
 	
-	public boolean isElementDisplayed(By elementLocator) {
-		return getElement(elementLocator).isDisplayed();
-	}
-
 }
