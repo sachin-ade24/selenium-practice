@@ -67,7 +67,6 @@ public class JavaScriptUtil {
 	}
 	
 	public void sendKeysUsingJsExecutorWithId(String idValue, String msgOrTxt) {
-		js.executeScript("document.getElementById('"+idValue+"').value='"+msgOrTxt+"'");
+		js.executeScript("document.getElementById('"+ idValue +"').value='"+msgOrTxt+"'");
 	}
-	
 }
