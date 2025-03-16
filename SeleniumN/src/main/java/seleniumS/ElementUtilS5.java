@@ -9,6 +9,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -417,4 +418,62 @@ public class ElementUtilS5 {
 		return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
 	}
 	
+	/*Actions Utils*/
+	/**
+	 * This method is used to point a web-element
+	 * @param locator
+	 */
+	public void moveCursorToAnElementAction(By locator) {
+		Actions action = new Actions(driver);
+		action.moveToElement(getElement(locator)).perform();
+	}
+	
+	/**
+	 * Handles two menu levels.
+	 * @param firstMenuLevelLocator
+	 * @param secondLevelMenuLocator
+	 */
+	public void twoLevelMenuHandlingAction(By firstMenuLevelLocator, By secondLevelMenuLocator) {
+		Actions action = new Actions(driver);
+		action.moveToElement(getElement(firstMenuLevelLocator)).perform();
+		action.moveToElement(getElement(secondLevelMenuLocator)).click(getElement(secondLevelMenuLocator)).build().perform();
+	}
+	
+	/**
+	 * Performs click action using Actions class.
+	 * @param locator
+	 */
+	public void clickAction(By locator) {
+		Actions act =  new Actions(driver);
+		act.moveToElement(getElement(locator)).click(getElement(locator)).build().perform();
+	}
+	
+	/**
+	 * Types into the text box using Actions class.
+	 * @param locator
+	 * @param text
+	 */
+	public void typeAction(By locator, String text) {
+		Actions act =  new Actions(driver);
+		act.moveToElement(getElement(locator)).sendKeys(getElement(locator), text).build().perform();
+	}
+	
+	/**
+	 * This method performs sendKeys by taking pause after typing each character 
+	 * using Actions class.
+	 * @param text
+	 * @param locator
+	 * @param pauseTime
+	 */
+	public void typeActionWithPause(String text, By locator, long pauseTime) {
+		Actions act =  new Actions(driver);
+		
+		char textChars[] = text.toCharArray();
+		
+		for(char textChar: textChars) {
+			act.sendKeys(getElement(locator), String.valueOf(textChar))
+				.pause(pauseTime)
+					.perform();
+		}
+	}
 }
