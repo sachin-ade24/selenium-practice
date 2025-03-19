@@ -467,9 +467,7 @@ public class ElementUtilS5 {
 	 */
 	public void typeActionWithPause(String text, By locator, long pauseTime) {
 		Actions act =  new Actions(driver);
-		
 		char textChars[] = text.toCharArray();
-		
 		for(char textChar: textChars) {
 			act.sendKeys(getElement(locator), String.valueOf(textChar))
 				.pause(pauseTime)
